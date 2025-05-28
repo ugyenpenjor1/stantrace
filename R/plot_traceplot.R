@@ -7,43 +7,32 @@
 #' @return A ggplot2 object showing traceplots.
 #' @export
 plot_traceplot <- function(draws_array, parameters = NULL, ncol = 3) {
-  library(ggplot2)
-  library(dplyr)
-  library(tidyr)
 
-  draws_long <- as.data.frame.table(draws_array, responseName = "value") %>%
-    rename(iteration = 1, chain = 2, variable = 3) %>%
-    mutate(
+  draws_long <- as.data.frame.table(draws_array, responseName = "value") |>
+    dplyr::rename(iteration = 1, chain = 2, variable = 3) |>
+    dplyr::mutate(
       iteration = as.integer(iteration),
       chain = factor(chain),
       variable = factor(variable)
     )
 
   if (!is.null(parameters)) {
-    draws_long <- draws_long %>%
-      filter(variable %in% parameters)
+    draws_long <- draws_long |>
+      dplyr::filter(variable %in% parameters)
   }
 
-  ggplot(draws_long, aes(x = iteration, y = value, color = chain)) +
-    geom_line(alpha = 0.6) +
-    scale_colour_manual(
+  ggplot2::ggplot(draws_long, ggplot2::aes(x = iteration, y = value, color = chain)) +
+    ggplot2::geom_line(alpha = 0.6) +
+    ggplot2::scale_colour_manual(
       values = c("chocolate3", "#0072B2", "darkorchid4", "#009E73")
     ) +
-    facet_wrap(~ variable, scales = "free_y", ncol = ncol) +
-    labs(
+    ggplot2::facet_wrap(~ variable, scales = "free_y", ncol = ncol) +
+    ggplot2::labs(
       title = "Traceplots of MCMC Samples",
       x = "Iteration",
       y = "Value",
       color = "Chain"
     ) +
-    theme_minimal()
+    ggplot2::theme_minimal()
+
 }
-
-
-# Document the function
-devtools::document()
-# This creates the help files under man/ and updates NAMESPACE.
-
-# Install the package locally
-devtools::install()
-
