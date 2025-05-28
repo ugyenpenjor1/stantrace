@@ -1,14 +1,14 @@
 #' Plot Traceplots for MCMC Draws Array
 #'
-#' @param draws_array A 3D array of MCMC samples (iterations x chains x parameters).
+#' @param draws A 3D array of MCMC samples (iterations x chains x parameters).
 #' @param parameters Optional vector of parameter names to include in the plot.
 #' @param ncol Number of columns in facet layout (default is 3).
 #'
 #' @return A ggplot2 object showing traceplots.
 #' @export
-plot_traceplot <- function(draws_array, parameters = NULL, ncol = 3) {
+plot_traceplot <- function(draws, parameters = NULL, ncol = 3) {
 
-  draws_long <- as.data.frame.table(draws_array, responseName = "value") |>
+  draws_long <- as.data.frame.table(draws, responseName = "value") |>
     dplyr::rename(iteration = 1, chain = 2, variable = 3) |>
     dplyr::mutate(
       iteration = as.integer(iteration),
