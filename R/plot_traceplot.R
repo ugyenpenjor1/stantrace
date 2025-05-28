@@ -6,6 +6,7 @@
 #'
 #' @return A ggplot2 object showing traceplots.
 #' @export
+
 plot_traceplot <- function(draws, parameters = NULL, ncol = 3) {
   draws_long <- as.data.frame.table(draws, responseName = "value") |>
     dplyr::rename(iteration = 1, chain = 2, variable = 3) |>
