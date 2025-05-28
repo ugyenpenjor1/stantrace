@@ -40,6 +40,8 @@ git push -u origin main
 # Install the package from GitHub
 install.packages("remotes")
 remotes::install_github("ugyenpenjor1/stantrace")
+remotes::install_github("ugyenpenjor1/stantrace", force = TRUE)
+
 
 # Install from the local directory
 devtools::install("C:/Users/upenjor/Downloads/stantrace")

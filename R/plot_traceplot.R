@@ -6,9 +6,9 @@
 #'
 #' @return A ggplot2 object showing traceplots.
 #' @export
-plot_traceplot <- function(draws_array, parameters = NULL, ncol = 3) {
+plot_traceplot <- function(x, parameters = NULL, ncol = 3) {
 
-  draws_long <- as.data.frame.table(draws_array, responseName = "value") |>
+  draws_long <- as.data.frame.table(x, responseName = "value") |>
     dplyr::rename(iteration = 1, chain = 2, variable = 3) |>
     dplyr::mutate(
       iteration = as.integer(iteration),
