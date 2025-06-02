@@ -2,9 +2,11 @@
 install.packages(c("devtools", "roxygen2", "usethis"))
 
 # Create a new package structure
+# First create an empty folder called "stantrace" in Downloads (or any place of convenience)
 usethis::create_package("C:/Users/upenjor/Downloads/stantrace")
+# This opens a new RStudio
 
-# Add function
+# Add function (RStudio | File | New File | R script)
 # Create a new R script inside the R/ directory
 # - File: R/plot_traceplot.R
 # - Paste your function there:
