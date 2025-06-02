@@ -14,7 +14,8 @@ which all inherit from "CmdStanFit". Must implement the \code{output_files()} me
 If missing, a temporary file is used and a message will inform the user.}
 
 \item{csv_dir}{A character string specifying the directory where the CSV output
-files should be copied. The directory will be created if it doesn't exist.}
+files should be copied. The directory will be created if it doesn't exist.
+#' @importFrom tidyr some_function}
 }
 \value{
 No return value. Called for its side effects: saves an RDS file and copies CSV files.
