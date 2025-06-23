@@ -22,9 +22,10 @@ plot_traceplot <- function(draws, parameters = NULL, ncol = 3) {
   }
 
   ggplot2::ggplot(draws_long, ggplot2::aes(x = iteration, y = value, color = chain)) +
-    ggplot2::geom_line(alpha = 0.6) +
+    ggplot2::geom_line(alpha = 0.8) +
     ggplot2::scale_colour_manual(
-      values = c("chocolate3", "#0072B2", "darkorchid4", "#009E73")
+      #values = c("chocolate3", "#0072B2", "darkorchid4", "#009E73")
+      values = c("#cc99cc", "#333333", "indianred3", "#006699")
     ) +
     ggplot2::facet_wrap(~ variable, scales = "free_y", ncol = ncol) +
     ggplot2::labs(
