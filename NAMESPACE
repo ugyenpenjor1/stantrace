@@ -3,4 +3,5 @@
 export(load_cmdstanr_fit)
 export(plot_ppc)
 export(plot_traceplot)
+export(plot_traceplot2)
 export(save_cmdstanr_fit)
