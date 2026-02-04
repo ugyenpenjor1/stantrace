@@ -23,40 +23,89 @@
 #' fit <- model$sample(...)  # CmdStanR fit object
 #' save_cmdstanr_fit(fit, "fit_model.rds", "output/csv_files")
 #' }
+#save_cmdstanr_fit <- function(fit, rds_path, csv_dir) {
+  # Check if fit is a cmdstanr object
+#  if (!inherits(fit, c("CmdStanMCMC", "CmdStanGQ", "CmdStanVB"))) {
+#    stop("The 'fit' object must be of class CmdStanMCMC, CmdStanGQ, or CmdStanVB from the cmdstanr package.")
+#  }
+
+  # Get output CSV file paths
+#  csv_files <- tryCatch(
+#    fit$output_files(),
+#    error = function(e) stop("Failed to retrieve output files from 'fit': ", e$message)
+#  )
+
+  # Validate output files
+#  if (length(csv_files) == 0 || any(!file.exists(csv_files))) {
+#    stop("No valid CSV files found in fit$output_files().")
+#  }
+
+  # Create directory for CSVs if it doesn't exist
+#  if (!dir.exists(csv_dir)) {
+#    dir.create(csv_dir, recursive = TRUE)
+#    message("Created directory: ", csv_dir)
+#  }
+
+  # Copy CSV files
+#  file.copy(csv_files, to = csv_dir, overwrite = TRUE)
+
+  # If rds_path is missing, create a temporary one
+#  if (missing(rds_path)) {
+#    rds_path <- tempfile(fileext = ".rds")
+#    message("No rds_path provided. Saving fit object to temporary file: ", rds_path)
+#  }
+
+  # Save the fit object
+#  saveRDS(fit, file = rds_path)
+
+#  message("CmdStanR fit object and CSV files saved successfully.")
+#}
+
 save_cmdstanr_fit <- function(fit, rds_path, csv_dir) {
   # Check if fit is a cmdstanr object
   if (!inherits(fit, c("CmdStanMCMC", "CmdStanGQ", "CmdStanVB"))) {
-    stop("The 'fit' object must be of class CmdStanMCMC, CmdStanGQ, or CmdStanVB from the cmdstanr package.")
+    stop("The 'fit' object must be of class CmdStanMCMC, CmdStanGQ, or CmdStanVB.")
   }
-
-  # Get output CSV file paths
+  
+  # Get original output CSV file paths
   csv_files <- tryCatch(
     fit$output_files(),
     error = function(e) stop("Failed to retrieve output files from 'fit': ", e$message)
   )
-
-  # Validate output files
+  
+  # Validate original output files exist
   if (length(csv_files) == 0 || any(!file.exists(csv_files))) {
     stop("No valid CSV files found in fit$output_files().")
   }
-
+  
   # Create directory for CSVs if it doesn't exist
   if (!dir.exists(csv_dir)) {
     dir.create(csv_dir, recursive = TRUE)
     message("Created directory: ", csv_dir)
   }
-
-  # Copy CSV files
-  file.copy(csv_files, to = csv_dir, overwrite = TRUE)
-
+  
+  # --- CRITICAL CHANGE START ---
+  # 1. Define the new destination paths
+  new_csv_paths <- file.path(csv_dir, basename(csv_files))
+  
+  # 2. Copy the physical files to the new directory
+  file.copy(csv_files, to = new_csv_paths, overwrite = TRUE)
+  
+  # 3. Use the internal method to point the R object to the NEW locations
+  # This ensures that when you load the RDS later, it looks in csv_dir
+  fit$save_output_files(dir = csv_dir, basename = basename(csv_files))
+  # --- CRITICAL CHANGE END ---
+  
   # If rds_path is missing, create a temporary one
   if (missing(rds_path)) {
     rds_path <- tempfile(fileext = ".rds")
-    message("No rds_path provided. Saving fit object to temporary file: ", rds_path)
+    message("No rds_path provided. Saving fit object to: ", rds_path)
   }
-
-  # Save the fit object
-  saveRDS(fit, file = rds_path)
-
+  
+  # Use $save_object() instead of saveRDS for better compatibility
+  fit$save_object(file = rds_path)
+  
   message("CmdStanR fit object and CSV files saved successfully.")
 }
+
+#save_cmdstanr_fit(fit3, "fit_model.rds", "output_csv_files")
